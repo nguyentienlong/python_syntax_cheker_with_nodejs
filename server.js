@@ -1,15 +1,12 @@
 const http = require('http');
 const { spawn } = require('child_process');
 const fs = require('fs');
-
 const server = http.createServer();
 
 server.on('request', (req, res) => {
   if (req.url === '/validate-python') {
     // todo parse formular1 fro request
     const formular = "(20000 if x <= 4 else 20000 + (x - 4) *5000 ";
-
-    // formular2 = '(20000 if x <= 4 else 20000 + (x - 4) *5000)';
     const tempPyFile = '/tmp/temp.py';
 
     fs.writeFile('/tmp/temp.py', formular, (err) => {
@@ -19,15 +16,14 @@ server.on('request', (req, res) => {
         console.log('/tmp/temp.py');
     });
 
+    const pySyntaxChecker = spawn('python', ['py_checker.py', tempPyFile], {capture: ['stdout', 'stderr']});
 
-    const pep8Checker = spawn('python', ['py_checker.py', tempPyFile], {capture: ['stdout', 'stderr']});
-
-    pep8Checker.stdout.on('data', (data) => {
+    pySyntaxChecker.stdout.on('data', (data) => {
       console.log(data);
       res.end('ok')
     });
 
-    pep8Checker.stderr.on('data', (data) => {
+    pySyntaxChecker.stderr.on('data', (data) => {
       console.log(data);
       res.end(data)
     });
