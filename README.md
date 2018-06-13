@@ -1,7 +1,7 @@
 # python_syntax_cheker_with_nodejs
 check python syntax with nodejs
 
-`node server.js`
+`node server.js &`
 
 `curl http://localhost:3000/validate-python`
 
